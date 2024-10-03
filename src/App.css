@@ -36,3 +36,43 @@
     transform: rotate(360deg);
   }
 }
+
+.openfoam-class-node {
+    background: white;
+    border: 1px solid #222;
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.node-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.node-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.property-node {
+    background: lightyellow;
+    border: 1px solid #222;
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.node-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.node-default-value,
+.node-description,
+.node-type {
+    font-size: 0.9em;
+    margin: 2px 0;
+}
