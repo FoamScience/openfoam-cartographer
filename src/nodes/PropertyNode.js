@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Handle } from 'reactflow';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/default.css';
+import '../highlight-custom.css'; 
 
 const PropertyNode = ({ data }) => {
-    const { label, description, type, defaultValue } = data;
+    const { label, description, type, defaultValue, backgroundColor } = data;
     const defaultHlColor = 'blue';
     const nonParsableHlColor = 'orange';
     const invalidHlColor = 'red';
-    const validHlColor = 'green'
+    const validHlColor = 'green';
+    const inputRef = useRef(null);
+    const codeRef = useRef(null);
 
-    // State to track the input value and validity
     const [inputValue, setInputValue] = useState(defaultValue);
     const [hlColor, setHlColor] = useState(defaultHlColor);
 
     const validateInput = async (value) => {
         const inputString = `${label} ${value};`;
 
-        // Check if Tree-sitter is ready
         if (!window.TreeSitterReady) {
             console.error("Tree-sitter is not ready.");
             setHlColor(nonParsableHlColor);
@@ -23,14 +26,14 @@ const PropertyNode = ({ data }) => {
         }
 
         try {
-            const Parser = window.TreeSitter; // Access the global Tree-sitter instance
+            const Parser = window.TreeSitter;
             const parser = new Parser();
-            const language = await Parser.Language.load('/tree-sitter/tree-sitter-foam.wasm'); // Load your specific grammar
+            const language = await Parser.Language.load('/tree-sitter/tree-sitter-foam.wasm');
             parser.setLanguage(language);
-            
+
             const tree = parser.parse(inputString);
-            const isValid = tree.rootNode.hasError === false; // Adjust your validation logic as needed
-            setHlColor( isValid ? validHlColor : invalidHlColor);
+            const isValid = tree.rootNode.hasError === false;
+            setHlColor(isValid ? validHlColor : invalidHlColor);
         } catch (error) {
             console.error("Error during validation:", error);
             setHlColor(nonParsableHlColor);
@@ -40,28 +43,47 @@ const PropertyNode = ({ data }) => {
     const handleInputChange = (event) => {
         const newValue = event.target.value;
         setInputValue(newValue);
-        validateInput(newValue); // Validate on input change
+        validateInput(newValue);
     };
 
+    useEffect(() => {
+        if (codeRef.current) {
+            hljs.highlightElement(codeRef.current);
+        }
+    }, [type]);
+
     return (
-        <div className="property-node">
+        <div
+            className="property-node"
+            style={{
+                width: '250px',
+                backgroundColor: backgroundColor || '#ffffff',
+                padding: '10px',
+                borderRadius: '5px',
+                wordWrap: 'break-word',
+            }}
+        >
             <div className="node-header">{label}</div>
             <p>{description}</p>
-            <div>
-                <code className="c++">{type}</code>
+            <div style={{ padding: "2px" }}>
+                <code ref={codeRef} className="cpp">
+                    {type}
+                </code>
             </div>
-            <input 
-                type="text" 
-                value={inputValue} 
-                onChange={handleInputChange} 
-                placeholder="Enter value" 
+            <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={handleInputChange}
+                placeholder="Enter value"
                 style={{
-                    borderColor: hlColor, // Change color based on validity
+                    borderColor: hlColor,
                     borderWidth: '2px',
-                }} 
+                    width: '100%',
+                    boxSizing: 'border-box',
+                }}
             />
             <Handle type="target" position="top" />
-            <Handle type="source" position="bottom" />
         </div>
     );
 };

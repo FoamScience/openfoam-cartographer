@@ -1,0 +1,14 @@
+/* highlight-custom.css */
+
+.hljs {
+    background: transparent !important; /* Set background of the entire block to transparent */
+}
+
+.hljs-code {
+    background: transparent !important; /* Ensure code block background is also transparent */
+}
+
+/* Optional: Set text color or any other properties */
+.hljs {
+    color: #000; /* Set text color */
+}
