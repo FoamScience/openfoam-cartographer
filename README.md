@@ -21,3 +21,5 @@ npm start
 ```
 
 There is a permanent legend node to get you started.
+
+![2024-10-04_12-25](https://github.com/user-attachments/assets/f3cca36c-b740-429a-9170-f05c4957c51f)
